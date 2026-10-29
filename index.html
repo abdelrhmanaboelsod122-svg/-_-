@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>طموح | منصة المذاكرة الذكية والمخصصة</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+            tajawal: ['Tajawal', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: 'var(--brand-50)',
+              100: 'var(--brand-100)',
+              200: 'var(--brand-200)',
+              300: 'var(--brand-300)',
+              400: 'var(--brand-400)',
+              500: 'var(--brand-500)',
+              600: 'var(--brand-600)',
+              700: 'var(--brand-700)',
+              800: 'var(--brand-800)',
+              900: 'var(--brand-900)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-cairo transition-colors duration-300 antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white pb-20 md:pb-0">
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo & Motto -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('dashboard')">
+        <div id="dynamicLogoIcon" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center text-white shadow-md shadow-brand-500/25 transition-transform hover:scale-105">
+          <i class="fa-solid fa-graduation-cap text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-xl tracking-tight text-slate-900 font-tajawal">طُمُوح</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-700 font-semibold" id="navBadge">النسخة الذكية</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium hidden sm:block">رفيقك المخصص للتفوق الدراسي وبنك الأخطاء والتراكمات</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links (Desktop) -->
+      <nav class="hidden md:flex items-center gap-1 lg:gap-2">
+        <button onclick="navigateTo('dashboard')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-brand-600 bg-brand-50" data-page="dashboard">
+          <i class="fa-solid fa-house-chimney text-xs"></i>
+          <span>الرئيسية</span>
+        </button>
+        <button onclick="navigateTo('timer')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100" data-page="timer">
+          <i class="fa-solid fa-stopwatch text-xs"></i>
+          <span>عداد المذاكرة</span>
+        </button>
+        <button onclick="navigateTo('subjects')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100" data-page="subjects">
+          <i class="fa-solid fa-book-open text-xs"></i>
+          <span>المواد والدروس</span>
+        </button>
+        <button onclick="navigateTo('errors')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100" data-page="errors">
+          <i class="fa-solid fa-triangle-exclamation text-xs text-amber-500"></i>
+          <span>راجع غلطاتك</span>
+        </button>
+        <button onclick="navigateTo('backlog')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100" data-page="backlog">
+          <i class="fa-solid fa-list-check text-xs text-rose-500"></i>
+          <span>التراكمات</span>
+        </button>
+        <button onclick="navigateTo('journey')" class="nav-btn px-3 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100" data-page="journey">
+          <i class="fa-solid fa-camera-retro text-xs text-indigo-500"></i>
+          <span>توثيق الرحلة</span>
+        </button>
+      </nav>
+
+      <!-- User Profile / Switch Theme / Login Status -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Theme Mode Toggle -->
+        <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-lg border border-slate-200 text-slate-500 hover:text-brand-600 hover:border-brand-300 flex items-center justify-center transition" title="تبديل الوضع الليلي">
+          <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
+        </button>
+
+        <!-- Register / Login Button -->
+        <button onclick="openOnboardingModal()" class="px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-md shadow-brand-600/20 transition active:scale-95">
+          <i class="fa-solid fa-user-pen text-xs"></i>
+          <span>تسجيل الدخول / بياناتي</span>
+        </button>
+
+        <!-- User Profile Pill -->
+        <div id="userHeaderProfile" class="flex items-center gap-2 pl-1 pr-3 py-1 bg-slate-100 rounded-full border border-slate-200 cursor-pointer hover:bg-slate-200/80 transition" onclick="openProfileModal()">
+          <span id="headerUserName" class="text-xs font-bold text-slate-700 hidden sm:inline">أهلاً بك</span>
+          <div id="headerUserAvatar" class="w-7 h-7 rounded-full bg-brand-500 text-white text-xs font-bold flex items-center justify-center shadow-xs">
+            ط
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== GOAL BANNER (DYNAMIC MOTTO) ==================== -->
+  <section id="studentMottoBanner" class="bg-gradient-to-r from-brand-600 via-brand-500 to-indigo-600 text-white py-3 px-4 shadow-sm transition-all duration-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-right">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl animate-bounce" id="mottoIcon">🩺</span>
+        <div>
+          <span class="font-bold text-sm sm:text-base font-tajawal tracking-wide" id="mottoText">حلم الطب مستنيك يا دكتور.. واصل مسيرتك!</span>
+          <span class="text-xs text-brand-100 block sm:inline sm:mr-2" id="subMottoText">كل دقيقة مذاكرة بتقربك خطوة للقمة 🎯</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="bg-white/15 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border border-white/20">
+          <i class="fa-solid fa-fire text-amber-300 animate-pulse"></i>
+          <span>حماسك اليومي: <b id="streakDays">3 أيام متتالية</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CONTENT CONTAINERS ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- PAGE 1: DASHBOARD -->
+    <section id="page-dashboard" class="page-view space-y-5">
+
+      <!-- VIP CREDITS PROMINENT FRAME (برواز فخم وبارز وجميل) -->
+      <div class="vip-gold-frame p-4 sm:p-5 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-500 to-yellow-300 text-amber-950 flex items-center justify-center text-xl shadow-md shrink-0">
+            <i class="fa-solid fa-crown text-amber-950"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300/80">فريق إبداع وتطوير المنصة 🌟</span>
+              <span class="text-xs text-slate-400 hidden sm:inline">نسخة ذكية متطورة 2026</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm">
+              <span class="text-slate-700">💡 صاحبة الفكرة: <strong class="text-slate-900 font-black text-sm sm:text-base font-alex">نورهان فتحي</strong></span>
+              <span class="text-slate-300 hidden sm:inline">•</span>
+              <span class="text-slate-700">💻 تصميم وتطوير الموقع: <strong class="text-slate-900 font-black text-sm sm:text-base font-alex">عبدالرحمن ابوالسعود</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="shrink-0 flex items-center gap-2 w-full sm:w-auto justify-end">
+          <a href="https://wa.me/201154591411" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md shadow-emerald-500/25 transition active:scale-95">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span>واتساب: 01154591411</span>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Welcome & Quick Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <!-- Welcome Card -->
+        <div class="md:col-span-2 bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 rounded-2xl p-5 shadow-xs relative overflow-hidden flex flex-col justify-between">
+          <div class="absolute -left-6 -bottom-6 w-32 h-32 rounded-full bg-brand-500/10 pointer-events-none blur-2xl"></div>
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-md" id="studentStageLabel">الثانوية العامة - مسار علمي</span>
+              <span class="text-xs text-slate-400 font-medium" id="currentDateStr">الخميس، 29 أكتوبر</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-slate-900 font-tajawal mb-1">
+              مرحباً يا <span id="dashStudentName" class="text-brand-600">بطل</span>! جاهز لجلسة اليوم؟ 👋
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md">
+              التفوق مش ضربة حظ، التفوق جلسة تركيز ورا جلسة، وإصرار على مراجعة الغلطات وتصفير التراكمات أولاً بأول.
+            </p>
+          </div>
+          
+          <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-2">
+            <button onclick="navigateTo('timer')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md shadow-brand-600/20 transition-all flex items-center gap-2 active:scale-95">
+              <i class="fa-solid fa-play text-xs"></i>
+              <span>ابدأ جلسة مذاكرة الآن</span>
+            </button>
+            <button onclick="openAddBacklogModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl transition flex items-center gap-2">
+              <i class="fa-solid fa-plus text-xs"></i>
+              <span>إضافة درس للتراكمات</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Stat 1: Study Time -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">إجمالي وقت المذاكرة</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i class="fa-solid fa-hourglass-half text-sm"></i>
+            </div>
+          </div>
+          <div class="my-3">
+            <div class="text-2xl font-black text-slate-800 font-tajawal" id="dashTotalStudyMinutes">0 دقيقة</div>
+            <p class="text-[11px] text-slate-400">اليوم: <span id="dashTodayMinutes" class="font-bold text-emerald-600">0 دقيقة</span></p>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+            <div id="dailyGoalProgressBar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: 25%"></div>
+          </div>
+        </div>
+
+        <!-- Stat 2: Error Bank & Backlog -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-500">الأخطاء والتراكمات</span>
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+              <i class="fa-solid fa-clipboard-check text-sm"></i>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 my-2">
+            <div class="bg-amber-50/70 p-2 rounded-xl text-center cursor-pointer hover:bg-amber-100/70 transition" onclick="navigateTo('errors')">
+              <span class="text-xs text-amber-700 block font-semibold">غلطات للمراجعة</span>
+              <span id="dashErrorCount" class="text-lg font-black text-amber-600">0</span>
+            </div>
+            <div class="bg-rose-50/70 p-2 rounded-xl text-center cursor-pointer hover:bg-rose-100/70 transition" onclick="navigateTo('backlog')">
+              <span class="text-xs text-rose-700 block font-semibold">دروس متراكمة</span>
+              <span id="dashBacklogCount" class="text-lg font-black text-rose-600">0</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400 text-center">راجع غلطاتك أولاً بأول حتى تثبت المعلومة</p>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Cards: Features Preview -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        <!-- Smart Timer Card -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i id="hobbyTimerIconPreview" class="fa-solid fa-book-bookmark text-xl"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900 mb-1">العداد الذكي المصمم لهوايتك</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              عداد مذاكرة مبتكر على شكل هوايتك المفضلة (<span id="userHobbyNameSpan" class="font-bold text-brand-600">القراءة</span>) مع استراحات مبهجة، واقتباسات لكتّاب ولاعبين، ومفاجآت لكسر الملل!
+            </p>
+          </div>
+          <button onclick="navigateTo('timer')" class="mt-4 text-xs font-bold text-brand-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span>دخول صفحة العداد</span>
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          </button>
+        </div>
+
+        <!-- Error Bank Card -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-spell-check text-xl"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900 mb-1">خانة «راجع غلطاتك» المستمرة</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              مستوحاة من أسلوب كبار الأساتذة (مثل مستر أحمد عادل ومحمد صلاح). أي سؤال تغلط فيه هيفضل محفوظ لآخر السنة عشان تراجعه قبل الامتحانات مع الشرح!
+            </p>
+          </div>
+          <button onclick="navigateTo('errors')" class="mt-4 text-xs font-bold text-amber-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span>فتح بنك أخطائي</span>
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          </button>
+        </div>
+
+        <!-- Backlog & Weekly Journey Card -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-calendar-week text-xl"></i>
+            </div>
+            <h3 class="font-bold text-base text-slate-900 mb-1">جدول التراكمات وتوثيق المكتب</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              تصفير الدروس المتأخرة بجدول ذكي، والتقاط صور لمكتبك بعد الجلسات مع إحساسك، لنجمعها آخر الأسبوع في كولاج تشجيعي فخم يلهمك للاستمرار!
+            </p>
+          </div>
+          <button onclick="navigateTo('backlog')" class="mt-4 text-xs font-bold text-indigo-600 flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span>تنظيم التراكمات والصور</span>
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Active Subjects Grid Preview -->
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-base text-slate-900">موادك الدراسية لهذا الفصل</h3>
+            <p class="text-xs text-slate-400">اضغط على أي مادة لبدء العداد، تلخيص الدروس، أو مراجعة أخطائك فيها</p>
+          </div>
+          <button onclick="navigateTo('subjects')" class="text-xs font-bold text-brand-600 hover:underline">
+            عرض كل المواد والدروس
+          </button>
+        </div>
+        <div id="dashSubjectsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <!-- Filled dynamically via JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PAGE 2: SMART TIMER (عداد المذاكرة المخصص للهواية) -->
+    <section id="page-timer" class="page-view hidden space-y-6">
+      
+      <!-- Timer Header / Subject Setup -->
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div id="timerHobbyBadgeIcon" class="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center text-xl shadow-xs">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-slate-900 font-tajawal">عداد المذاكرة التفاعلي</h2>
+                <span id="timerHobbyThemeTag" class="text-xs px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 font-semibold border border-brand-200">شكل القراءة والروايات</span>
+              </div>
+              <p class="text-xs text-slate-500">اختر المادة والدرس وحدد جلساتك.. والمفاجأة مستنياك في الاستراحة!</p>
+            </div>
+          </div>
+
+          <!-- Session Controls Config -->
+          <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+            <select id="timerSubjectSelect" onchange="onTimerSubjectChange()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-brand-500 outline-hidden">
+              <!-- Dynamically populated -->
+            </select>
+            <select id="timerLessonSelect" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-brand-500 outline-hidden max-w-[180px]">
+              <!-- Dynamically populated -->
+            </select>
+            <div class="flex items-center gap-2 bg-brand-50 border border-brand-200 rounded-xl px-3 py-1.5 shadow-2xs">
+              <span class="text-xs text-brand-900 font-bold whitespace-nowrap flex items-center gap-1">
+                <i class="fa-solid fa-clock text-brand-600"></i>
+                <span>حدد وقت جلستك بحرية:</span>
+              </span>
+              <input type="number" id="customTimerMinutesInput" oninput="onCustomTimerDurationChange(this.value)" min="1" max="600" value="25" class="w-16 bg-white border border-brand-300 rounded-lg px-2 py-1 text-xs font-black text-center text-brand-700 focus:ring-2 focus:ring-brand-500 outline-hidden shadow-inner" placeholder="25" title="اكتب أي عدد دقائق تريده للمذاكرة">
+              <span class="text-xs text-brand-700 font-bold">دقيقة</span>
+            </div>
+            <select id="timerSessionDurationSelect" onchange="onTimerPresetSelect(this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-brand-500 outline-hidden">
+              <option value="25" selected>أوقات جاهزة: 25 دقيقة (بومودورو)</option>
+              <option value="15">15 دقيقة (جلسة سريعة)</option>
+              <option value="30">30 دقيقة (نصف ساعة)</option>
+              <option value="45">45 دقيقة (جلسة نموذجية)</option>
+              <option value="60">60 دقيقة (ساعة كاملة)</option>
+              <option value="90">90 دقيقة (ساعة ونصف)</option>
+              <option value="120">120 دقيقة (ساعتان)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Interactive Timer Screen -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- The Shape / Visual Clock Card (Col 2) -->
+        <div class="lg:col-span-2 bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-xs flex flex-col items-center justify-center relative overflow-hidden min-h-[420px]">
+          
+          <!-- Inspiring Quote Tailored to Hobby & Student -->
+          <div id="timerQuoteBox" class="text-center max-w-lg mb-6 transition-all duration-300">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold mb-2">
+              <i class="fa-solid fa-quote-right text-[10px]"></i>
+              <span id="quoteAuthor">نجيب محفوظ - للأدباء والقراء</span>
+            </div>
+            <p id="quoteContent" class="text-sm sm:text-base font-semibold text-slate-700 italic">
+              "النجاح لا يأتي مصادفة، بل هو ثمرة جهد وعرق ومثابرة كل دقيقة."
+            </p>
+          </div>
+
+          <!-- DYNAMIC HOBBY-SHAPED TIMER CONTAINER -->
+          <div id="hobbyShapeContainer" class="relative my-4 flex items-center justify-center">
+            
+            <!-- Default / Reading Mode: 3D Animated Book -->
+            <div id="shapeReadingBook" class="hobby-shape book-timer-wrapper relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+              <div class="book-cover shadow-2xl rounded-2xl border-4 border-brand-700 bg-gradient-to-tr from-brand-800 to-brand-600 w-full h-full flex flex-col items-center justify-center text-white relative overflow-hidden">
+                <div class="absolute inset-2 border border-white/20 rounded-xl pointer-events-none"></div>
+                <div class="book-spine absolute right-0 top-0 bottom-0 w-4 bg-brand-900 rounded-r-2xl"></div>
+                <!-- Bookmark ribbon -->
+                <div class="bookmark-ribbon absolute top-0 left-8 w-5 h-16 bg-amber-400 rounded-b-md shadow-md animate-pulse"></div>
+                
+                <span class="text-xs uppercase tracking-widest text-brand-200 font-bold mb-1" id="timerModeLabel">جلسة مذاكرة</span>
+                <div class="text-5xl sm:text-6xl font-black font-mono tracking-tight my-2 drop-shadow-md" id="timerDisplay">25:00</div>
+                <div class="flex items-center gap-2 text-xs text-brand-100 font-medium">
+                  <i class="fa-solid fa-book-open-reader"></i>
+                  <span id="timerCurrentLessonBadge">الفيزياء الحديثة</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Football Mode: Stadium & Spinning Ball -->
+            <div id="shapeFootball" class="hobby-shape hidden relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
+              <div class="w-full h-full rounded-full border-8 border-emerald-500 bg-gradient-to-tr from-emerald-800 to-emerald-600 flex flex-col items-center justify-center text-white relative shadow-2xl overflow-hidden">
+                <div class="football-center-circle absolute w-40 h-40 border-2 border-white/30 rounded-full"></div>
+                <div class="football-line absolute w-full h-0.5 bg-white/30"></div>
+                <i class="fa-solid fa-futbol text-2xl text-white/40 mb-1 animate-spin" style="animation-duration: 20s"></i>
+                <div class="text-5xl sm:text-6xl font-black font-mono tracking-tight my-1 drop-shadow-md z-10" id="timerDisplayFootball">25:00</div>
+                <span class="text-xs text-emerald-200 font-bold z-10">شوط التركيز الكروي ⚽</span>
+              </div>
+            </div>
+
+            <!-- Programming / Coding Mode: Code Terminal -->
+            <div id="shapeCoding" class="hobby-shape hidden relative w-72 h-64 sm:w-80 sm:h-68 bg-slate-900 rounded-2xl border border-slate-700 shadow-2xl p-4 flex flex-col justify-between text-emerald-400 font-mono">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                  <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                </div>
+                <span class="text-[11px] text-slate-400">study_session.exe</span>
+              </div>
+              <div class="text-center py-2">
+                <span class="text-slate-500 text-xs">// Time remaining</span>
+                <div class="text-5xl sm:text-6xl font-black tracking-tight text-white my-1" id="timerDisplayCoding">25:00</div>
+                <span class="text-xs text-brand-400">const dream = "التفوق";</span>
+              </div>
+              <div class="text-[11px] text-slate-500 flex justify-between">
+                <span>Status: <b class="text-emerald-400">COMPILING...</b></span>
+                <span>Focus: 100%</span>
+              </div>
+            </div>
+
+            <!-- Generic / Creative Art Palette Mode -->
+            <div id="shapeArt" class="hobby-shape hidden relative w-64 h-64 sm:w-72 sm:h-72 rounded-full border-4 border-dashed border-purple-400 bg-gradient-to-tr from-purple-900 to-indigo-700 flex flex-col items-center justify-center text-white shadow-2xl p-4">
+              <div class="absolute -top-2 left-10 w-6 h-6 rounded-full bg-rose-400 shadow-sm"></div>
+              <div class="absolute top-8 -right-1 w-6 h-6 rounded-full bg-amber-400 shadow-sm"></div>
+              <div class="absolute bottom-6 left-6 w-6 h-6 rounded-full bg-emerald-400 shadow-sm"></div>
+              <i class="fa-solid fa-palette text-2xl text-purple-200 mb-1"></i>
+              <div class="text-5xl sm:text-6xl font-black font-mono tracking-tight my-1 text-white" id="timerDisplayArt">25:00</div>
+              <span class="text-xs text-purple-200 font-bold">لوحة إنجازك الفنية 🎨</span>
+            </div>
+
+          </div>
+
+          <!-- Controls: Play / Pause / Reset -->
+          <div class="flex items-center gap-4 mt-6">
+            <button id="btnTimerStart" onclick="startTimer()" class="w-14 h-14 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white flex items-center justify-center text-xl shadow-lg shadow-brand-600/30 transition-all hover:scale-105 active:scale-95" title="بدء العداد">
+              <i class="fa-solid fa-play pr-0.5"></i>
+            </button>
+            <button id="btnTimerPause" onclick="pauseTimer()" class="hidden w-14 h-14 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white flex items-center justify-center text-xl shadow-lg shadow-amber-500/30 transition-all hover:scale-105 active:scale-95" title="إيقاف مؤقت">
+              <i class="fa-solid fa-pause"></i>
+            </button>
+            <button onclick="resetTimer()" class="w-11 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition active:scale-95" title="إعادة ضبط">
+              <i class="fa-solid fa-rotate-right text-sm"></i>
+            </button>
+            <button onclick="simulateSessionEndFast()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 text-[11px] font-semibold rounded-xl transition" title="تجربة فورية لانتهاء الجلسة وظهور المفاجأة والاختبار">
+              <i class="fa-solid fa-bolt text-amber-500 mr-1"></i> تجربة سريعة للانتهاء
+            </button>
+          </div>
+
+          <!-- Focus status -->
+          <div class="flex items-center gap-4 text-xs text-slate-400 mt-4">
+            <span class="flex items-center gap-1"><i class="fa-solid fa-shield text-indigo-500"></i> وضع التركيز مانع التشتت مفعّل</span>
+          </div>
+        </div>
+
+        <!-- Timer Sidebar: How it works & Rewards status -->
+        <div class="space-y-4">
+          
+          <!-- The Surprise Rule Card -->
+          <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-5 shadow-xs">
+            <div class="flex items-center gap-2.5 text-amber-800 font-bold text-sm mb-2">
+              <i class="fa-solid fa-gift text-amber-600 text-base"></i>
+              <span>نظام المفاجأة وكسر الملل</span>
+            </div>
+            <p class="text-xs text-amber-900/80 leading-relaxed">
+              أول ما تنتهي الجلسة، هيظهر لك سؤال فوري: <b>«إيه إحساسك بعد المذاكرة؟»</b>
+              <br><br>
+              لو حسيت بملل أو تعب، جهزنا لك مفاجأة حصرية (صفحتين من رواية شيقة بدون اسم الرواية، أو قصة كروية ملهمة) مكافأة لك وممنوع تصويرها عشان تحافظ على تركيزك، ونكملها في الجلسة اللي بعدها! 🎁
+            </p>
+          </div>
+
+          <!-- Session Progress in this lesson -->
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+            <h4 class="font-bold text-xs text-slate-700 mb-3 flex items-center justify-between">
+              <span>خطة الجلسة الحالية</span>
+              <span class="text-[11px] text-brand-600 font-semibold" id="sessionPlanRatio">جلسة 1 من 2</span>
+            </h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-slate-500">الجلسة الأولى (تركيز)</span>
+                <span class="font-bold text-slate-800" id="lblDuration1">25 دقيقة</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                <div id="sessionPart1Progress" class="bg-brand-500 h-1.5 rounded-full" style="width: 0%"></div>
+              </div>
+              <div class="flex items-center justify-between text-xs pt-1">
+                <span class="text-slate-500">استراحة كسر الملل + سؤال المشاعر</span>
+                <span class="font-bold text-amber-600">5 دقائق</span>
+              </div>
+              <div class="flex items-center justify-between text-xs pt-1">
+                <span class="text-slate-500">الجلسة الثانية + اختبار سريع للجزئية</span>
+                <span class="font-bold text-slate-800">25 دقيقة</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desk Snapshot Reminder -->
+          <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4 text-xs text-indigo-900 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-500 text-white flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+            <div>
+              <span class="font-bold block">متنساش لقطة مكتبك اليوم!</span>
+              <span class="text-indigo-700/80 text-[11px]">هنجمع لقطاتك مع مشاعرك في كولاج ملهم نهاية الأسبوع.</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PAGE 3: SUBJECTS & LESSONS (المواد والدروس ولوحة المادة) -->
+    <section id="page-subjects" class="page-view hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div>
+          <h2 class="text-xl font-black text-slate-900 font-tajawal">المناهج والدروس المقررة</h2>
+          <p class="text-xs text-slate-500">تم تهيئة المواد طبقاً لمرحلتك الدراسية ومسارك الأكاديمي</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="subjectSearchInput" onkeyup="filterSubjects()" placeholder="ابحث عن مادة أو درس..." class="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 outline-hidden w-64">
+        </div>
+      </div>
+
+      <!-- Subjects Cards Grid -->
+      <div id="fullSubjectsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </section>
+
+    <!-- PAGE 4: ERROR BANK (راجع غلطاتك - مستمر طوال العام) -->
+    <section id="page-errors" class="page-view hidden space-y-6">
+      
+      <!-- Error Bank Header Banner -->
+      <div class="bg-gradient-to-r from-amber-600 via-amber-500 to-orange-500 text-white rounded-3xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>مستوحى من نظام منصة مستر أحمد عادل ومحمد صلاح</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black font-tajawal">بنك الأخطاء: «راجع غلطاتك»</h2>
+          <p class="text-xs sm:text-sm text-amber-100 max-w-xl mt-1 leading-relaxed">
+            كل سؤال بتغلط فيه بيفضل محفوظ هنا لغاية آخر السنة، عشان ترجع له قبل ليالي الامتحان وتتأكد إن النقطة الضعيفة اتحولت لنقطة قوة! 🎯
+          </p>
+        </div>
+        <div class="bg-white text-slate-800 px-6 py-4 rounded-2xl text-center shadow-lg shrink-0">
+          <span class="text-xs text-slate-500 font-semibold block">مجموع الغلطات المحفوظة</span>
+          <span id="errorBankHeroTotal" class="text-3xl font-black text-amber-600 font-tajawal">0</span>
+          <span class="text-[10px] text-emerald-600 font-bold block">مطلوب مراجعتها</span>
+        </div>
+      </div>
+
+      <!-- Filters & Actions -->
+      <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="filterErrorBank('all')" class="err-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-50 text-brand-700" data-filter="all">الكل</button>
+          <button onclick="filterErrorBank('فيزياء')" class="err-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="فيزياء">فيزياء</button>
+          <button onclick="filterErrorBank('كيمياء')" class="err-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="كيمياء">كيمياء</button>
+          <button onclick="filterErrorBank('أحياء')" class="err-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="أحياء">أحياء</button>
+          <button onclick="filterErrorBank('رياضيات')" class="err-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100" data-filter="رياضيات">رياضيات</button>
+        </div>
+        <div>
+          <button onclick="openAddCustomErrorModal()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1.5">
+            <i class="fa-solid fa-plus text-[10px]"></i>
+            <span>إضافة سؤال غلطت فيه يدوياً</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Error Questions List -->
+      <div id="errorBankList" class="space-y-4">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+    </section>
+
+    <!-- PAGE 5: BACKLOG MANAGEMENT (التراكمات والجدول الذكي) -->
+    <section id="page-backlog" class="page-view hidden space-y-6">
+      
+      <!-- Backlog Header -->
+      <div class="bg-gradient-to-r from-rose-600 via-rose-500 to-pink-500 text-white rounded-3xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <i class="fa-solid fa-fire-burner"></i>
+            <span>تصفير المتأخرات بذكاء</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black font-tajawal">قسم التراكمات الذكي</h2>
+          <p class="text-xs sm:text-sm text-rose-100 max-w-xl mt-1 leading-relaxed">
+            الدروس اللي اتأجلت أو ما خلصتهاش في خطتك السابقة بتنزل هنا تلقائياً، والسيستم بينشئ لك جدول موزع تدريجياً مع مذاكرتك اليومية بدون ضغط!
+          </p>
+        </div>
+        <button onclick="openAddBacklogModal()" class="bg-white text-rose-700 hover:bg-rose-50 font-black text-xs sm:text-sm px-5 py-3 rounded-2xl shadow-lg transition-transform active:scale-95 shrink-0 flex items-center gap-2">
+          <i class="fa-solid fa-plus"></i>
+          <span>إضافة درس متراكم جديد</span>
+        </button>
+      </div>
+
+      <!-- Backlog Stats & Generated Schedule -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left: Backlog Lessons List -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-sm text-slate-800">قائمة الدروس المتراكمة الحالية</h3>
+            <span class="text-xs text-slate-400">أي درس تخلصه اضغط "تم الإنجاز" عشان يتشطب من التراكمات</span>
+          </div>
+          <div id="backlogListContainer" class="space-y-3">
+            <!-- Populated via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Right: Auto Schedule for Backlog Recovery -->
+        <div class="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs space-y-4">
+          <div class="flex items-center gap-2 text-slate-800 font-bold text-sm border-b border-slate-100 pb-3">
+            <i class="fa-solid fa-calendar-check text-rose-500"></i>
+            <span>الجدول المقترح لتصفير التراكمات</span>
+          </div>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            بناءً على الدروس المسجلة، ننصح بتخصيص <b>ساعة إضافية يومياً</b> مقسمة كالآتي:
+          </p>
+          <div id="backlogGeneratedSchedule" class="space-y-2.5 text-xs">
+            <!-- Dynamically generated plan -->
+          </div>
+          <div class="pt-3 border-t border-slate-100">
+            <div class="flex justify-between text-xs text-slate-500 mb-1">
+              <span>نسبة تصفير التراكمات</span>
+              <span id="backlogClearRate" class="font-bold text-rose-600">30%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div id="backlogClearBar" class="bg-rose-500 h-2 rounded-full" style="width: 30%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PAGE 6: WEEKLY JOURNEY & DESK SNAPS (توثيق الرحلة ولقطات المكتب) -->
+    <section id="page-journey" class="page-view hidden space-y-6">
+      
+      <!-- Journey Header -->
+      <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white rounded-3xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <i class="fa-solid fa-camera"></i>
+            <span>دفتر ذكريات الكفاح والتفوق</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black font-tajawal">توثيق لقطات المكتب ومشاعرك الأسبوعية</h2>
+          <p class="text-xs sm:text-sm text-indigo-100 max-w-xl mt-1 leading-relaxed">
+            صور مكتبك بعد كل جلسة وسجل إحساسك، وآخر كل أسبوع بنجمع كل اللقطات في كولاج ملهم يحسسك بقيمة تعبك: <b>«في أيام كنت تعبان بس ما وقفتش.. حلمك بيقرب يا دكتور!»</b>
+          </p>
+        </div>
+        <button onclick="openSnapUploadModal()" class="bg-white text-indigo-700 hover:bg-indigo-50 font-black text-xs sm:text-sm px-5 py-3 rounded-2xl shadow-lg transition-transform active:scale-95 shrink-0 flex items-center gap-2">
+          <i class="fa-solid fa-camera-retro"></i>
+          <span>التقاط / رفع صورة لمكتبي</span>
+        </button>
+      </div>
+
+      <!-- Weekly Collage Showcase Generator -->
+      <div class="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-xs">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
+          <div>
+            <h3 class="font-bold text-base text-slate-900 font-tajawal">كولاج الأسبوع المجمّع 📸</h3>
+            <p class="text-xs text-slate-400">لقطاتك الملتقطة ومشاعر كفاحك هذا الأسبوع مجتمعة في لوحة واحدة</p>
+          </div>
+          <button onclick="downloadCollage()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs px-4 py-2 rounded-xl transition flex items-center gap-2 border border-indigo-200">
+            <i class="fa-solid fa-download"></i>
+            <span>تحميل كولاج الفخر (صورة)</span>
+          </button>
+        </div>
+
+        <!-- The Generated Collage Preview Canvas/Box -->
+        <div id="weeklyCollageCanvas" class="bg-gradient-to-tr from-slate-900 via-slate-800 to-indigo-950 p-6 rounded-2xl text-white shadow-xl relative overflow-hidden">
+          
+          <!-- Collage Header -->
+          <div class="text-center mb-6 border-b border-white/10 pb-4">
+            <span class="text-xs uppercase tracking-widest text-brand-300 font-bold">رحلة الأسبوع الدراسي • توثيق الكفاح</span>
+            <h4 class="text-xl sm:text-2xl font-black font-tajawal text-white mt-1" id="collageHeroTitle">
+              «في أيام كنت تعبان.. بس ما وقفتش واستمريت!»
+            </h4>
+            <p class="text-xs text-indigo-200 mt-1" id="collageHeroSub">
+              حلم <span class="text-amber-300 font-bold" id="collageDreamWord">الطب</span> مستنيك يا دكتور.. واصل مسيرتك 🩺
+            </p>
+          </div>
+
+          <!-- Snaps Grid inside collage -->
+          <div id="collageSnapsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Bottom watermark -->
+          <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50">
+            <span>منصة طُمُوح الذكية للمذاكرة</span>
+            <span id="collageStudentSignature">بواسطة: بطل الثانوية العامة</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== MOBILE BOTTOM NAVBAR ==================== -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 py-1.5 px-2 flex justify-around items-center">
+    <button onclick="navigateTo('dashboard')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600" data-page="dashboard">
+      <i class="fa-solid fa-house-chimney text-base"></i>
+      <span class="text-[10px] font-bold mt-0.5">الرئيسية</span>
+    </button>
+    <button onclick="navigateTo('timer')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600" data-page="timer">
+      <i class="fa-solid fa-stopwatch text-base"></i>
+      <span class="text-[10px] font-bold mt-0.5">العداد</span>
+    </button>
+    <button onclick="navigateTo('subjects')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600" data-page="subjects">
+      <i class="fa-solid fa-book-open text-base"></i>
+      <span class="text-[10px] font-bold mt-0.5">المواد</span>
+    </button>
+    <button onclick="navigateTo('errors')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600 relative" data-page="errors">
+      <i class="fa-solid fa-triangle-exclamation text-base text-amber-500"></i>
+      <span class="text-[10px] font-bold mt-0.5">غلطاتك</span>
+    </button>
+    <button onclick="navigateTo('backlog')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600" data-page="backlog">
+      <i class="fa-solid fa-list-check text-base text-rose-500"></i>
+      <span class="text-[10px] font-bold mt-0.5">تراكماتي</span>
+    </button>
+    <button onclick="navigateTo('journey')" class="mobile-nav-btn flex flex-col items-center p-1.5 rounded-lg text-slate-500 hover:text-brand-600" data-page="journey">
+      <i class="fa-solid fa-camera-retro text-base text-indigo-500"></i>
+      <span class="text-[10px] font-bold mt-0.5">الرحلة</span>
+    </button>
+  </div>
+
+  <!-- ==================== FOOTER WITH PRECISE CREDITS ==================== -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-8 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <!-- Platform Branding & Vision -->
+        <div class="text-center md:text-right">
+          <div class="flex items-center justify-center md:justify-start gap-2">
+            <span class="font-black text-xl font-tajawal text-slate-900">طُمُوح</span>
+            <span class="text-xs px-2 py-0.5 rounded-md bg-brand-100 text-brand-700 font-bold">EduTrack AI</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1 max-w-md">
+            المنصة الذكية الأولى المخصصة نفسياً وأكاديمياً لطلاب المدارس والجامعات.
+          </p>
+        </div>
+
+        <!-- Required Special Credits Card (نورهان فتحي & عبدالرحمن ابوالسعود) -->
+        <div class="vip-gold-frame p-4 text-center md:text-right shadow-md flex flex-col sm:flex-row items-center gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center justify-center md:justify-start gap-1.5 text-xs text-slate-700">
+              <i class="fa-solid fa-crown text-amber-500"></i>
+              <span>صاحبة الفكرة:</span>
+              <strong class="text-slate-900 font-black text-sm font-alex">نورهان فتحي</strong>
+            </div>
+            <div class="flex items-center justify-center md:justify-start gap-1.5 text-xs text-slate-700">
+              <i class="fa-solid fa-code text-brand-600"></i>
+              <span>تصميم وبرمجة الموقع:</span>
+              <strong class="text-slate-900 font-black text-sm font-alex">عبدالرحمن ابوالسعود</strong>
+            </div>
+          </div>
+          <div class="sm:border-r sm:border-slate-200 sm:pr-4">
+            <a href="https://wa.me/201154591411" target="_blank" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition active:scale-95">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span>واتساب: 01154591411</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2 text-center">
+        <p>© 2026 جميع الحقوق محفوظة لمنصة طموح التعليمية</p>
+        <p>مصمم ليعمل بسلاسة فائقة على الموبايل، التابلت، واللابتوب وكافة الشاشات</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== MODAL 1: REGISTRATION & PERSONAL PROFILE (بياناتك الشخصية فقط) ==================== -->
+  <div id="onboardingModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative my-8 animate-fade-in">
+      
+      <!-- Modal Progress Bar -->
+      <div class="w-full bg-slate-100 rounded-full h-1.5 mb-6 overflow-hidden">
+        <div id="onboardingProgressBar" class="bg-brand-600 h-1.5 rounded-full transition-all duration-300" style="width: 50%"></div>
+      </div>
+
+      <!-- STEP 1: Personal Info & Education Grade -->
+      <div id="onboardingStep1" class="onboarding-step space-y-4">
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-2 text-xl shadow-xs">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 font-tajawal">مرحباً بك في طُمُوح 🎓</h2>
+          <p class="text-xs text-slate-500 mt-0.5">سجل بياناتك الشخصية لتخصيص جدولك والمواد المقررة لك لعام 2026</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">اسمك الكريم بالكامل *</label>
+            <input type="text" id="obNameInput" placeholder="مثال: أحمد عادل أو سارة محمد" value="أحمد عادل" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-hidden">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">العمر (السن) *</label>
+            <input type="number" id="obAgeInput" min="10" max="30" value="17" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-hidden">
+          </div>
+        </div>
+
+        <!-- Grade Selection (Updated 2026) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">الصف الدراسي لعام 2026 *</label>
+            <select id="obStageSelect" onchange="onOnboardingStageChange()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold focus:ring-2 focus:ring-brand-500 outline-hidden">
+              <optgroup label="المرحلة الإعدادية (2026)">
+                <option value="prep_1">الصف الأول الإعدادي (المنهج المطور)</option>
+                <option value="prep_2">الصف الثاني الإعدادي</option>
+                <option value="prep_3">الصف الثالث الإعدادي (الشهادة الإعدادية)</option>
+              </optgroup>
+              <optgroup label="المرحلة الثانوية (2026)">
+                <option value="highschool_1">الصف الأول الثانوي (النظام المطور 5 مواد)</option>
+                <option value="highschool_2">الصف الثاني الثانوي</option>
+                <option value="highschool_3" selected>الصف الثالث الثانوي (ثانوية عامة 2026)</option>
+              </optgroup>
+              <optgroup label="المرحلة الجامعية">
+                <option value="university">المرحلة الجامعية</option>
+              </optgroup>
+            </select>
+          </div>
+          <div id="obTrackContainer">
+            <label class="block text-xs font-bold text-slate-700 mb-1">المسار أو الشعبة المقررة *</label>
+            <select id="obTrackSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold focus:ring-2 focus:ring-brand-500 outline-hidden">
+              <option value="علمي علوم">علمي علوم (طب، صيدلة، علوم)</option>
+              <option value="علمي رياضة">علمي رياضة (هندسة، حاسبات)</option>
+              <option value="أدبي">شعبة أدبي</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">الجنس *</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center justify-center gap-2 p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+              <input type="radio" name="obGender" value="ذكر" checked class="text-brand-600 focus:ring-brand-500">
+              <span class="text-xs font-bold text-slate-700">طالب (ذكر 👨‍🎓)</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+              <input type="radio" name="obGender" value="أنثى" class="text-brand-600 focus:ring-brand-500">
+              <span class="text-xs font-bold text-slate-700">طالبة (أنثى 👩‍🎓)</span>
+            </label>
+          </div>
+        </div>
+
+        <button onclick="goToOnboardingStep(2)" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition active:scale-98 flex items-center justify-center gap-2">
+          <span>التالي: اختيار الكلية والهدف الدراسي</span>
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </button>
+      </div>
+
+      <!-- STEP 2: Career Dream & Colleges (تحديد الكلية والحلم الجامعي) -->
+      <div id="onboardingStep2" class="onboarding-step hidden space-y-4">
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-white flex items-center justify-center mx-auto mb-2 text-xl shadow-md shadow-amber-500/20 animate-bounce">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 font-alex">حلمك الجامعي والكلية التي تطمح إليها 🎯</h2>
+          <p class="text-xs text-slate-500 mt-0.5">اختر كليتك التي تطمح إليها لتخصيص عبارات التحفيز وعالمك الدراسي</p>
+        </div>
+
+        <!-- Prestigious Colleges Selection -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
+            <span>اختر كليتك أو هدفك الدراسي المستقبلي: *</span>
+            <span class="text-[10px] text-brand-600 font-semibold" id="selectedCollegeNameDisplay">الطب البشري</span>
+          </label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-56 overflow-y-auto p-1 border border-slate-100 rounded-2xl bg-slate-50/50">
+            
+            <button type="button" onclick="selectCollegeCard('كلية الطب البشري', 'دكتور', '🩺', this)" class="college-card active p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">🩺</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">الطب البشري</strong>
+                <span class="text-[10px] text-slate-400 block">طبيب المستقبل</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية الهندسة', 'مهندس', '📐', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">📐</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">كلية الهندسة</strong>
+                <span class="text-[10px] text-slate-400 block">باشمهندس</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('حاسبات وذكاء اصطناعي', 'مهندس برمجيات', '💻', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">💻</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">حاسبات وذكاء اصطناعي</strong>
+                <span class="text-[10px] text-slate-400 block">تقنية وبرمجة</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية الصيدلة', 'دكتور صيدلي', '💊', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">💊</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">كلية الصيدلة</strong>
+                <span class="text-[10px] text-slate-400 block">دكتور صيدلي</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('طب الفم والأسنان', 'طبيب أسنان', '🦷', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">🦷</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">طب الأسنان</strong>
+                <span class="text-[10px] text-slate-400 block">طبيب أسنان</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية الإعلام', 'إعلامي', '🎙️', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">🎙️</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">كلية الإعلام</strong>
+                <span class="text-[10px] text-slate-400 block">إعلام وصحافة</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية الألسن واللغات', 'مترجم دولي', '🌍', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">🌍</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">الألسن واللغات</strong>
+                <span class="text-[10px] text-slate-400 block">ترجمة ولغات</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية الحقوق والشريعة', 'سيادة المستشار', '⚖️', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">⚖️</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">الحقوق والشريعة</strong>
+                <span class="text-[10px] text-slate-400 block">القضاء والعدالة</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectCollegeCard('كلية التجارة وإدارة الأعمال', 'خبير مالي', '💼', this)" class="college-card p-2.5 rounded-xl text-right flex items-center gap-2.5">
+              <span class="text-xl shrink-0">💼</span>
+              <div class="min-w-0">
+                <strong class="text-xs font-bold text-slate-800 block truncate">إدارة الأعمال</strong>
+                <span class="text-[10px] text-slate-400 block">ريادة واستثمار</span>
+              </div>
+            </button>
+
+          </div>
+
+          <!-- Hidden storage input + custom option -->
+          <input type="hidden" id="obCareerDreamInput" value="كلية الطب البشري">
+          <div class="mt-2">
+            <input type="text" id="obCustomDreamInput" oninput="onCustomDreamInput(this.value)" placeholder="أو اكتب حلمك بنفسك لو مش موجود في القائمة..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-brand-500 outline-hidden">
+          </div>
+          
+          <div class="p-2.5 bg-brand-50 rounded-xl border border-brand-100 text-[11px] text-brand-800 flex items-center gap-2 mt-2">
+            <span class="text-sm">✨</span>
+            <span>عبارتك الدائمة في المنصة: <b id="dreamPreviewSentence">«حلم الطب البشري مستنيك يا دكتور!»</b></span>
+          </div>
+        </div>
+
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="goToOnboardingStep(1)" class="w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
+            رجوع
+          </button>
+          <button onclick="finishOnboarding()" class="w-2/3 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg shadow-brand-600/25 transition active:scale-98 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rocket"></i>
+            <span>تجهيز موقعي وبدء المذاكرة الآن!</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 4: ANIMATED PREPARATION SCREEN (يتم تجهيز الموقع لك...) -->
+      <div id="onboardingStepLoader" class="hidden text-center py-8 space-y-6">
+        <div class="relative w-24 h-24 mx-auto">
+          <div class="w-24 h-24 rounded-full border-4 border-slate-100 border-t-brand-600 animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center text-brand-600 text-2xl animate-pulse">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xl font-black text-slate-900 font-tajawal">يتم تجهيز عالمك الدراسي المخصص الآن...</h3>
+          <p class="text-xs text-slate-500 mt-2 max-w-sm mx-auto" id="loaderSubtext">
+            جاري تطبيق ألوانك المفضلة، وضبط شكل عداد المذاكرة، وتجهيز مناهجك وبنك الأخطاء...
+          </p>
+        </div>
+        <div class="flex justify-center gap-1.5 text-xs text-brand-600 font-bold">
+          <span class="inline-block animate-ping">●</span>
+          <span>لحظات ويفتح موقعك الخاص</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: MID-SESSION EMOTION CHECK-IN (إيه إحساسك بعد أول جلسة؟) ==================== -->
+  <div id="emotionCheckModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center animate-scale-up">
+      <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-3 text-3xl">
+        <i class="fa-solid fa-face-smile"></i>
+      </div>
+      <h3 class="text-xl font-black text-slate-900 font-tajawal">إيه إحساسك بعد أول جلسة مذاكرة؟ 💭</h3>
+      <p class="text-xs text-slate-500 mt-1">صارحنا عشان نحدد المفاجأة المناسبة لكسر مودك وتجديد نشاطك!</p>
+
+      <div class="grid grid-cols-2 gap-2.5 my-4">
+        <button onclick="recordEmotionAndProceed('bored')" class="p-3 border border-slate-200 rounded-xl hover:bg-amber-50 hover:border-amber-400 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-2">
+          <span>ملل وزهقان 🥱</span>
+        </button>
+        <button onclick="recordEmotionAndProceed('tired')" class="p-3 border border-slate-200 rounded-xl hover:bg-rose-50 hover:border-rose-400 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-2">
+          <span>تعبان ومجهد 😵‍💫</span>
+        </button>
+        <button onclick="recordEmotionAndProceed('focused')" class="p-3 border border-slate-200 rounded-xl hover:bg-emerald-50 hover:border-emerald-400 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-2">
+          <span>متحمس ومركز 🔥</span>
+        </button>
+        <button onclick="recordEmotionAndProceed('distracted')" class="p-3 border border-slate-200 rounded-xl hover:bg-blue-50 hover:border-blue-400 text-slate-700 text-xs font-bold transition flex items-center justify-center gap-2">
+          <span>متشتت شوية 🤯</span>
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <input type="text" id="customEmotionNote" placeholder="أو عبر بكلمتين عن اللي حاسس بيه..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 outline-hidden">
+      </div>
+
+      <button onclick="recordEmotionAndProceed('custom')" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+        تأكيد واكتشاف المفاجأة 🎁
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: ANTI-BOREDOM SURPRISE MODAL (المفاجأة + حماية التصوير) ==================== -->
+  <div id="surpriseModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-lg hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative overflow-hidden select-none" oncontextmenu="return false;">
+      
+      <!-- Anti-screenshot / Anti-copy watermark overlay -->
+      <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-5 rotate-[-25deg] text-slate-900 font-black text-4xl select-none z-20">
+        طموح • ممنوع النسخ أو التصوير • استمتع بالاستراحة
+      </div>
+
+      <!-- Surprise Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div class="flex items-center gap-2 text-amber-600 font-bold text-sm">
+          <i class="fa-solid fa-gift text-lg animate-bounce"></i>
+          <span>مفاجأة كسر الروتين واستعادة الحماس!</span>
+        </div>
+        <span class="text-[11px] bg-rose-100 text-rose-700 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+          <i class="fa-solid fa-camera-slash text-[10px]"></i> ممنوع التصوير
+        </span>
+      </div>
+
+      <!-- Surprise Content Container (Tailored to hobby: Book excerpt or match snippet) -->
+      <div id="surpriseContentWrapper" class="space-y-4 text-slate-800 leading-relaxed text-sm bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <!-- Filled dynamically: Story excerpt or Football snippet -->
+      </div>
+
+      <!-- Motivation and continuation pledge -->
+      <div class="mt-4 p-3 bg-brand-50 border border-brand-100 rounded-xl text-xs text-brand-800 flex items-center gap-2">
+        <i class="fa-solid fa-sparkles text-brand-600 text-sm"></i>
+        <span><b>الشرط الذهبي:</b> لو كملت الجلسة التانية وحليت الاختبار صح.. هنبعت لك الجزء المشوق التاني من الرواية!</span>
+      </div>
+
+      <!-- Actions -->
+      <div class="mt-5 flex gap-2">
+        <button onclick="closeSurpriseAndStartNextSession()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <span>شحنت طاقتي! ابدأ الجلسة الثانية فوراً 🔥</span>
+          <i class="fa-solid fa-play text-xs"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: POST-SESSION EVALUATION & INSTANT QUIZ ==================== -->
+  <div id="postSessionQuizModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative my-6">
+      
+      <!-- Phase 1: What did you study exactly? -->
+      <div id="quizPhaseWhatStudied" class="space-y-4">
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2 text-xl">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <h3 class="text-xl font-black text-slate-900 font-tajawal">عاش يا بطل! أنهيت الجلسة بنجاح 🎉</h3>
+          <p class="text-xs text-slate-500 mt-1">ذاكرت الدرس كله ولا أنهي جزئية بالضبط؟</p>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+            <input type="radio" name="studyPartCoverage" value="full" checked class="text-brand-600">
+            <span class="font-bold text-slate-800">خلصت الدرس كله بكل تفاصيله 🏆</span>
+          </label>
+          <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+            <input type="radio" name="studyPartCoverage" value="first_half" class="text-brand-600">
+            <span class="font-bold text-slate-800">خلصت النصف الأول / القوانين والمفاهيم الأساسية</span>
+          </label>
+          <label class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50">
+            <input type="radio" name="studyPartCoverage" value="exercises" class="text-brand-600">
+            <span class="font-bold text-slate-800">حليت التمارين والمسائل على الدرس</span>
+          </label>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">حدد الجزئية بدقة لو تحب:</label>
+          <input type="text" id="specificSectionText" placeholder="مثال: تجربة كومتون، أو المعايرة، أو النحو..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-brand-500 outline-hidden">
+        </div>
+
+        <button onclick="launchInteractiveSectionQuiz()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <span>اختبر فهمي للجزئية دي الآن (سؤالين للتقييم)</span>
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Phase 2: Instant Quiz Question -->
+      <div id="quizPhaseQuestion" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <span class="text-xs font-bold text-brand-600" id="quizSubjectTag">فيزياء - سؤال تأكيد الفهم</span>
+          <span class="text-xs text-slate-400" id="quizStepCount">السؤال 1 من 2</span>
+        </div>
+
+        <h4 class="font-bold text-sm sm:text-base text-slate-900 leading-relaxed" id="quizQuestionText">
+          سؤال الاختبار...
+        </h4>
+
+        <div id="quizOptionsContainer" class="space-y-2">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Result / Feedback box after answer -->
+        <div id="quizFeedbackBox" class="hidden p-3 rounded-xl text-xs"></div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button id="btnNextQuizQuestion" onclick="submitQuizAnswer()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl transition">
+            تأكيد الإجابة
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: SUBJECT ACTIONS HUB (بطاقة المادة) ==================== -->
+  <div id="subjectHubModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 animate-scale-up">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div id="hubSubjectIcon" class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-atom"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900" id="hubSubjectTitle">مادة الفيزياء</h3>
+            <span class="text-xs text-slate-400" id="hubSubjectSubtitle">الصف الثالث الثانوي - 8 دروس مقررة</span>
+          </div>
+        </div>
+        <button onclick="closeSubjectHubModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Requested Subject Actions (بالنص كما طلب المستخدم) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        
+        <!-- Action 1: يلا ابدأ عد -->
+        <button onclick="hubStartTimer()" class="p-3.5 rounded-2xl border border-slate-200 hover:border-brand-500 hover:bg-brand-50/50 text-right transition flex items-start gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-play"></i>
+          </div>
+          <div>
+            <strong class="text-xs font-bold text-slate-800 block">يلا ابدأ عداد</strong>
+            <span class="text-[11px] text-slate-400">بدء جلسة مذاكرة فورية للمادة</span>
+          </div>
+        </button>
+
+        <!-- Action 2: لخص لي دروسي -->
+        <button onclick="hubSummarizeLessons()" class="p-3.5 rounded-2xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 text-right transition flex items-start gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <strong class="text-xs font-bold text-slate-800 block">لخص لي دروسي</strong>
+            <span class="text-[11px] text-slate-400">ملخص ذكي ومكثف لأهم المفاهيم</span>
+          </div>
+        </button>
+
+        <!-- Action 3: اعملي امتحان على اللي درسته -->
+        <button onclick="hubGenerateExam()" class="p-3.5 rounded-2xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 text-right transition flex items-start gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-file-circle-question"></i>
+          </div>
+          <div>
+            <strong class="text-xs font-bold text-slate-800 block">اعملي امتحان</strong>
+            <span class="text-[11px] text-slate-400">اختبار شامل لقياس مستواك الفعلي</span>
+          </div>
+        </button>
+
+        <!-- Action 4: راجع أخطائي في المادة -->
+        <button onclick="hubReviewSubjectErrors()" class="p-3.5 rounded-2xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50/50 text-right transition flex items-start gap-3 group">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <strong class="text-xs font-bold text-slate-800 block">راجع أخطائي</strong>
+            <span class="text-[11px] text-slate-400">عرض الأسئلة التي تعثرت بها سابقاً</span>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- Action 5: تراكماتي في هذه المادة -->
+      <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+        <button onclick="hubReviewSubjectBacklog()" class="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1.5">
+          <i class="fa-solid fa-list-check"></i>
+          <span>عرض دروس التراكمات الخاصة بهذه المادة (<span id="hubSubjectBacklogBadge">1 درس</span>)</span>
+        </button>
+        <span class="text-[11px] text-slate-400 font-semibold" id="hubSubjectProgressPercent">نسبة الإنجاز: 45%</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 6: ADD BACKLOG LESSON ==================== -->
+  <div id="addBacklogModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div class="flex items-center gap-2 text-rose-600 font-bold text-sm">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>إضافة درس إلى التراكمات</span>
+        </div>
+        <button onclick="closeAddBacklogModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">المادة *</label>
+          <select id="newBacklogSubjectSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700">
+            <!-- options -->
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">اسم الدرس المتراكم *</label>
+          <input type="text" id="newBacklogTitleInput" placeholder="مثال: قانون أوم للدوائر المغلقة" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-rose-500 outline-hidden">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">سبب التأخير أو ملاحظتك:</label>
+          <input type="text" id="newBacklogReasonInput" placeholder="مثال: الدرس كان صعب ومحتاج إعادة حل المسائل" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-rose-500 outline-hidden">
+        </div>
+        <button onclick="saveNewBacklogItem()" class="w-full mt-2 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+          إدراج في جدول التراكمات الذكي
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 7: DESK SNAP & MOOD UPLOAD ==================== -->
+  <div id="deskSnapModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+        <div class="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+          <i class="fa-solid fa-camera"></i>
+          <span>توثيق لقطة من مكتبك اليوم</span>
+        </div>
+        <button onclick="closeSnapUploadModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Photo preview or placeholder -->
+        <div class="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center cursor-pointer hover:bg-slate-50 transition relative overflow-hidden" onclick="document.getElementById('snapFileInput').click()">
+          <input type="file" id="snapFileInput" accept="image/*" class="hidden" onchange="previewSnapImage(event)">
+          <div id="snapPlaceholderView">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-400 mb-2"></i>
+            <span class="text-xs font-bold text-slate-700 block">اضغط لالتقاط أو اختيار صورة من مكتبك</span>
+            <span class="text-[10px] text-slate-400">صورتك محفوظة محلياً على جهازك بأمان</span>
+          </div>
+          <img id="snapImagePreview" class="hidden w-full h-44 object-cover rounded-xl" src="" alt="Desk Preview">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">شعورك أثناء هذه الجلسة:</label>
+          <select id="snapMoodSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700">
+            <option value="تعبت بس ما وقفتش واستمريت 💪">تعبت بس ما وقفتش واستمريت 💪</option>
+            <option value="حماس غير مسبوق وتركيز عالي 🔥">حماس غير مسبوق وتركيز عالي 🔥</option>
+            <option value="كان في شوية ملل بس انتصرت عليه 🛡️">كان في شوية ملل بس انتصرت عليه 🛡️</option>
+            <option value="خطوة جديدة بتقربني من حلمي 🩺">خطوة جديدة بتقربني من حلمي 🩺</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">المادة اللي بتذاكرها حالياً:</label>
+          <input type="text" id="snapSubjectInput" placeholder="مثال: أحياء - الوراثة" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+        </div>
+
+        <button onclick="saveDeskSnap()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition">
+          حفظ اللقطة وإضافتها لكولاج الأسبوع 📸
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Chimes via Web Audio API -->
+  <script src="curriculum.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
